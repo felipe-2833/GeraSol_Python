@@ -29,7 +29,7 @@ if st.session_state.id == None and st.session_state.login == False:
     st.warning("Necessario fazer login para visualização dos seus pedidos")
     
 else:
-    tab1, tab2= st.tabs(["Compras", "Alugueis"])
+    tab1, tab2, tab3= st.tabs(["Compras", "Alugueis", "Pagos"])
     with tab1:
         for pedido in lista_compras:
             if pedido['idUsuario'] == st.session_state.id:
@@ -57,5 +57,23 @@ else:
                     st.write(f"Preço Total: {aluguel.get("totalAluguel")}")
                     st.write(f"Data Inicio: {aluguel.get("dataInicio")}")
                     st.write(f"Data Fim: {aluguel.get("dataFim")}")
+                    
+    with tab3:
+        for pedido in lista_aluguel:
+            if pedido['idUsuario'] == st.session_state.id:
+                for item in lista_itens_pedidos:
+                    if item.get("idPedido") == pedido.get("idPedido"):
+                        item_pedido = item
+                for i in lista_trans_aluguel:
+                    if i.get("idPedido") == pedido.get("idPedido"):
+                        aluguel = i
+                with st.expander(f"{visualizar_gerador(item_pedido.get("idGerador")).get("modelo")}"):
+                    st.write(f"Valor diario: {aluguel.get("valorDiario")}")
+                    st.write(f"Quantidade: {item_pedido.get("quantidade")}")
+                    st.write(f"Dias Alugados: {aluguel.get("diasAluguel")}")
+                    st.write(f"Preço Total: {aluguel.get("totalAluguel")}")
+                    st.write(f"Data Inicio: {aluguel.get("dataInicio")}")
+                    st.write(f"Data Fim: {aluguel.get("dataFim")}")
+                    
                    
    
