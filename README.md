@@ -1,35 +1,5 @@
-# Mecânixo Virtual
-
-O foco do projeto é o diagnóstico digital, impulsionado por um assistente
-virtual (chatbot), que permite aos usuários relatarem os problemas enfrentados com
-seus veículos. A Inteligência Artificial assume o papel do mecânico, agilizando o
-processo ao fornecer diagnósticos precisos e encaminhando-os aos profissionais
-responsáveis.
-
-
-## Funcionalidades
-
-- **Cadastro usuario:** Permite cadastrar usuario
-
-- **Login usuario:** Permite o login de usuario cadastrado.
-
-- **Atualizar informações:** O sistema permite a edição das informações do usuario.
-
-- **Ver informações user:** Possibilidade de ver informações do usuario.
-
-- **Download json:** Download de um arquivo json ocm as informações do usuario
-
-- **Conversa com bot para criação de chamado:** Chat bot mockado para pegar informações necessarias para criar chamado para oficina.
-
-- **Criar chamado:** Possibilidade criar chamdo a partir das informações do chatbot.
-
-- **Deletar chamado:** Possibilidade detetar chamados.
-
-- **API java:** Todas as informações são consumidas de uma api craida em java.
-
-- **Banco de Dados Oracle:** Todas as informações são armazenadas e manipuladas através de uma conexão com o OracleDB, garantindo persistência e segurança dos dados.
-
 # GeraSol
+
 O projeto GeraSol é uma solução inovadora desenvolvida para facilitar o acesso à energia solar por meio da venda e aluguel de geradores solares. Nosso sistema permite que usuários explorem diferentes opções de geradores, com características personalizadas, promovendo a sustentabilidade e reduzindo custos de energia.
 
 ## Funcionalidades
