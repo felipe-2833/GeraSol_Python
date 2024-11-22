@@ -16,17 +16,20 @@ if "message_login" not in st.session_state:
 if "messages" not in st.session_state:
     st.session_state.messages = []
     
-if "carro" not in st.session_state:
-    st.session_state.carro = ""
-    
-if "problema" not in st.session_state:
-    st.session_state.problema = ""
-    
 if "status" not in st.session_state:
     st.session_state.status = False
     
 if "lista_enderecos" not in st.session_state:
     st.session_state.lista_enderecos = []
+    
+if "portatil" not in st.session_state:
+    st.session_state["portatil"] = ""
+    
+if "bateria" not in st.session_state:
+    st.session_state["bateria"] = ""
+    
+if "potencia" not in st.session_state:
+    st.session_state["potencia"] = ""
 
 project_name = "Gera Sol: DLS Soluções"
 initial_text = (
@@ -47,9 +50,9 @@ objective_text = (
     "essencial para construir um futuro mais sustentável e eficiente."
 )
 team = [
-    "Diego Bassalo Canals",
-    "Felipe Levy Stephens Fidelix",
-    "Samir Hage Neto"
+    "Diego Bassalo Canals - rm:558710",
+    "Felipe Levy Stephens Fidelix - rm:556426",
+    "Samir Hage Neto - rm:557260"
 ]
 
 st.title(project_name)

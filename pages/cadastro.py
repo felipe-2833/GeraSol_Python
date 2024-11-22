@@ -4,6 +4,7 @@ import time
 import json
 import requests
 from modules.database.usuario import criar_cliente
+from modules.validations.validations import validar_email, validar_telefone
 
 st.title("Cadastro:")
 with st.container(height=400):
@@ -23,30 +24,36 @@ with st.container(height=400):
     )
    
 if st.button("Cadastrar"):
-    data_formatada = data_de_nascimento.strftime("%Y-%m-%d")
-    cadastro ={
-    "nomeCompleto": nome_completo,
-    "email": email,
-    "senha": senha,
-    "telefone": telefone,
-    "dataNascimento": data_formatada,
-    }
-    try:
-        resposta_api = criar_cliente(cadastro)
-        st.success("usuario cadastrado com sucesso")
-        time.sleep(5)
-        st.rerun()
-    except requests.exceptions.HTTPError as err:
-        if err.response.status_code == 422:
-            st.error("Erro de validação: os dados enviados não estão corretos.")
+    if not (nome_completo and email and senha and telefone and data_de_nascimento):
+        st.error("Preencha todos os campos")
+    else:
+        if not (validar_telefone(telefone) and validar_email(email)):
+            st.error("Campos email ou telefone preenchidos incorretamente")
         else:
-            st.error(f"Erro ao criar a tarefa: {err}")
-        
-        st.write("Resposta da API:", err.response.text)
+            data_formatada = data_de_nascimento.strftime("%Y-%m-%d")
+            cadastro ={
+            "nomeCompleto": nome_completo,
+            "email": email,
+            "senha": senha,
+            "telefone": telefone,
+            "dataNascimento": data_formatada,
+            }
+            try:
+                resposta_api = criar_cliente(cadastro)
+                st.success("usuario cadastrado com sucesso")
+                time.sleep(5)
+                st.rerun()
+            except requests.exceptions.HTTPError as err:
+                if err.response.status_code == 422:
+                    st.error("Erro de validação: os dados enviados não estão corretos.")
+                else:
+                    st.error(f"Erro ao criar a tarefa: {err}")
+                
+                st.write("Resposta da API:", err.response.text)
 
-    except json.JSONDecodeError:
-        st.error("Erro ao processar a resposta da API. Resposta inválida.")
+            except json.JSONDecodeError:
+                st.error("Erro ao processar a resposta da API. Resposta inválida.")
 
-    except Exception as e:
-        st.error(f"Ocorreu um erro inesperado: {e}")
+            except Exception as e:
+                st.error(f"Ocorreu um erro inesperado: {e}")
     

@@ -29,6 +29,8 @@ if st.button("Login"):
         st.session_state.message_login = "Usuario logado!"
     else:
         st.error("Usuario não encontrado!")
+        st.session_state.id = None
+        st.session_state.login = False
 
 if st.session_state.login:
     user = visualizar_user(st.session_state.id)
@@ -57,12 +59,23 @@ if st.session_state.login:
                 key_counter += 1
                 if st.button(label="Infos",key=key_counter):
                     infos_endereco(id)
+                json_data = json.dumps(endereco, indent=4)
+                key_counter += 1
+                st.download_button(
+                    label="Baixar JSON",
+                    data=json_data,
+                    file_name="dados_endereco.json",
+                    mime="application/json",
+                    key=key_counter
+                )
                 key_counter += 1
                 if st.button(label="Atualizar",key=key_counter):
                     atualizar_endereco(id)
                 key_counter += 1
                 if st.button(label="Deletar",key=key_counter):
                     apagar_endereco(id) 
+                    st.session_state.id = None
+                    st.session_state.login = False
                     st.success("Endereco deletado com sucesso.")
                     time.sleep(1)
                     st.rerun()

@@ -1,4 +1,5 @@
 import streamlit as st 
+import json
 from modules.database.catalogo import visualizar_gerador, visualizar_geradores
 from modules.dialog.dialogs_catalogo import infos_gerador, comprar_gerador, alugar_gerador
 
@@ -17,6 +18,16 @@ for gerador in lista_geradores:
         key_counter += 1
         if st.button(label="Infos Gerais",key=key_counter):
             infos_gerador(id)
+            
+        json_data = json.dumps(gerador, indent=4)
+        key_counter += 1
+        st.download_button(
+            label="Baixar JSON",
+            data=json_data,
+            file_name="dados_gerador.json",
+            mime="application/json",
+            key=key_counter
+        )
         key_counter += 1
         if st.session_state.id == None and st.session_state.login == False:
             st.warning("Necessario realizar login para comprar ou alugar gerador.")

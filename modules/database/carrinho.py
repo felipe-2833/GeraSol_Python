@@ -30,17 +30,17 @@ def atualiza_aluguel(id:int, data:dict):
     response.raise_for_status()
     return response.json()
 
-# def apagar_pedido(id:int):
-#     url = f"http://localhost:8080/api/pedidos/{id}"
-#     response = requests.delete(url)
-#     response.raise_for_status()
+def apagar_pedido(id:int):
+    url = f"http://localhost:8080/api/pedidos/{id}"
+    response = requests.delete(url)
+    response.raise_for_status()
     
-# def apagar_itens_pedido(id:int):
-#     url = f"http://localhost:8080/api/itens-pedido/{id}"
-#     response = requests.delete(url)
-#     response.raise_for_status()
+def apagar_itens_pedido(id:int):
+    url = f"http://localhost:8080/api/itens-pedido/{id}"
+    response = requests.delete(url)
+    response.raise_for_status()
 
-# def apagar_aluguel(id:int):
-#     url = f"http://localhost:8080/api/transacoes-aluguel/{id}"
-#     response = requests.delete(url)
-#     response.raise_for_status()
+def apagar_aluguel(id:int):
+    url = f"http://localhost:8080/api/transacoes-aluguel/{id}"
+    response = requests.delete(url)
+    response.raise_for_status()

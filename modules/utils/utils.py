@@ -5,6 +5,14 @@ import json
 import random
 from modules.database.catalogo import visualizar_gerador,visualizar_pedidos
 from modules.database.carrinho import atualiza_pedido
+from modules.database.usuario import apagar_user, visualizar_user
+from modules.database.enderecos import apagar_endereco, visualizar_enderecos
+from modules.database.carrinho import apagar_aluguel,apagar_itens_pedido,apagar_pedido, visualizar_alugueis,visualizar_itens,visualizar_pedido
+
+lista_alugueis = visualizar_alugueis()
+lista_itens = visualizar_itens()
+lista_pedidos = visualizar_pedido()
+lista_enderecos = visualizar_enderecos()
 
 #Função para pular linhas dependendo do numero passado
 def pula_linha(n:int):
@@ -21,7 +29,7 @@ def adiciona_lista_enderecos(lista:list[dict], id, lista_session) -> list:
     else:
         return new_list
 
-def cancelar_pedido(id:int, pedido):
+def cancelar_pedido(id:int, pedido:dict):
     if pedido['idUsuario'] == id:
         id_pedido = pedido['idPedido']
         id_usuario = pedido["idUsuario"]
@@ -149,3 +157,47 @@ def atualizar_pedido_dialog(id: int):
             
             except Exception as e:
                 st.error(f"Ocorreu um erro inesperado: {e}")
+                
+def encontrar_gerador(portatil:str, bateria:float, potencia:float, geradores_disponiveis:list[dict]) -> dict:
+    for gerador in geradores_disponiveis:
+        if (
+            gerador["portatil"] == portatil and
+            gerador["capacidadeBateria"] == bateria and
+            gerador["potencia"] == potencia
+        ):
+            return gerador
+
+    for gerador in geradores_disponiveis:
+        fatores_em_comum = sum([
+            gerador["portatil"] == portatil,
+            gerador["capacidadeBateria"] == bateria,
+            gerador["potencia"] == potencia
+        ])
+        if fatores_em_comum >= 2:
+            return gerador
+
+    for gerador in geradores_disponiveis:
+        if (
+            gerador["portatil"] == portatil or
+            gerador["capacidadeBateria"] == bateria or
+            gerador["potencia"] == potencia
+        ):
+            return gerador
+    return None
+
+def apagar_user_total(id:int):
+    user = visualizar_user(id)
+    for pedido in lista_pedidos:
+        if pedido["idUsuario"] == id:
+            for item in lista_itens:
+                if item["idPedido"] == pedido["idPedido"]:
+                    apagar_itens_pedido(item["idItem"])
+            for aluguel in lista_alugueis:
+                if aluguel["idPedido"] == pedido["idPedido"]:
+                    apagar_aluguel(aluguel["idAluguel"])
+            apagar_pedido(pedido["idPedido"])
+    for endereco in lista_enderecos:
+        if endereco["enderecoIdUser"] == user["idUsuario"]:
+            apagar_endereco(endereco["idEndereco"])
+    apagar_user(id)
+    

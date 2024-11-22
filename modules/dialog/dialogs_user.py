@@ -3,7 +3,8 @@ from datetime import datetime,timedelta
 import requests
 import json
 import time
-from modules.database.usuario import visualizar_user, atualiza_user, apagar_user
+from modules.database.usuario import visualizar_user, atualiza_user
+from modules.utils.utils import apagar_user_total
             
 @st.dialog("Atualizar informações do usuário:")
 def atualizar_user(id: int):
@@ -65,10 +66,11 @@ def infos_user(id: int):
 def apagar_user_adv(id):
     st.write("Caso apague este usuario, todas as informações referentes a ele serão perdidas.")
     if st.button("Apagar"):
-        apagar_user(id) 
+        apagar_user_total(id) 
         st.success("User deletado com sucesso.")
         time.sleep(1)
         st.session_state.login = False
+        st.session_state.id = None
         st.rerun()
     if st.button("Voltar"):
         st.rerun()

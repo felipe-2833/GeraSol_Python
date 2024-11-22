@@ -21,36 +21,40 @@ def cadastrar_endereco(id: int):
     numero = st.number_input("Número:", min_value=1, step=1)
     cidade = st.text_input("Cidade:", placeholder="Digite o nome da cidade")
     estado = st.text_input("Estado:", placeholder="Digite o estado")
+    
+    if not(endereco_id_user and cep and rua and numero and cidade and estado):
+        st.error("Preencha todos os campos")
+        
+    else:
+        # Botão de cadastro
+        if st.button("Cadastrar Endereço"):
+            endereco = {
+                "enderecoIdUser": endereco_id_user,
+                "cep": cep,
+                "rua": rua,
+                "numero": numero,
+                "cidade": cidade,
+                "estado": estado,
+            }
 
-    # Botão de cadastro
-    if st.button("Cadastrar Endereço"):
-        endereco = {
-            "enderecoIdUser": endereco_id_user,
-            "cep": cep,
-            "rua": rua,
-            "numero": numero,
-            "cidade": cidade,
-            "estado": estado,
-        }
+            try:
+                # Função para enviar o cadastro à API
+                resposta_api = criar_endereco(endereco)
+                st.success("Endereço cadastrado com sucesso!")
+                time.sleep(2)
+                st.rerun()
+            except requests.exceptions.HTTPError as err:
+                if err.response.status_code == 422:
+                    st.error("Erro de validação: os dados enviados não estão corretos.")
+                else:
+                    st.error(f"Erro ao cadastrar o endereço: {err}")
+                st.write("Resposta da API:", err.response.text)
 
-        try:
-            # Função para enviar o cadastro à API
-            resposta_api = criar_endereco(endereco)
-            st.success("Endereço cadastrado com sucesso!")
-            time.sleep(2)
-            st.rerun()
-        except requests.exceptions.HTTPError as err:
-            if err.response.status_code == 422:
-                st.error("Erro de validação: os dados enviados não estão corretos.")
-            else:
-                st.error(f"Erro ao cadastrar o endereço: {err}")
-            st.write("Resposta da API:", err.response.text)
+            except json.JSONDecodeError:
+                st.error("Erro ao processar a resposta da API. Resposta inválida.")
 
-        except json.JSONDecodeError:
-            st.error("Erro ao processar a resposta da API. Resposta inválida.")
-
-        except Exception as e:
-            st.error(f"Ocorreu um erro inesperado: {e}")
+            except Exception as e:
+                st.error(f"Ocorreu um erro inesperado: {e}")
             
 @st.dialog("Atualizar informações do endereço:")
 def atualizar_endereco(id: int):
