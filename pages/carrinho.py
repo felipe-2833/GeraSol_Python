@@ -3,8 +3,9 @@ from datetime import datetime, timedelta
 import time
 import json
 import requests
-from modules.database.catalogo import visualizar_gerador
+from modules.utils.utils import adiciona_pedido_carrinho, pula_linha
 from modules.database.carrinho import visualizar_pedido, visualizar_itens, visualizar_alugueis
+from modules.dialog.dialogs_carrinho import comprar_gerador
 
 lista_pedidos = visualizar_pedido()
 lista_trans_aluguel = visualizar_alugueis()
@@ -29,51 +30,15 @@ if st.session_state.id == None and st.session_state.login == False:
     st.warning("Necessario fazer login para visualização dos seus pedidos")
     
 else:
-    tab1, tab2, tab3= st.tabs(["Compras", "Alugueis", "Pagos"])
+    tab1, tab2, tab3= st.tabs(["Pendentes", "Concluidos", "Cancelados"])
     with tab1:
-        for pedido in lista_compras:
-            if pedido['idUsuario'] == st.session_state.id:
-                for item in lista_itens_pedidos:
-                    if item.get("idPedido") == pedido.get("idPedido"):
-                        item_pedido = item
-                with st.expander(f"{visualizar_gerador(item_pedido.get("idGerador")).get("modelo")}"):
-                    st.write(f"Valor: {item_pedido.get("valorUnitario")}")
-                    st.write(f"Quantidade: {item_pedido.get("quantidade")}")
-                    st.write(f"Preço Total: {pedido.get("totalPedido")}")
-                    st.write(f"Data do Pedido: {pedido.get("dataPedido")}")
+        preco = adiciona_pedido_carrinho(lista_compras, lista_itens_pedidos,lista_aluguel, lista_trans_aluguel, "Pendente")
+        pula_linha(3)
+        if st.button("Comprar"):
+            comprar_gerador(st.session_state.lista_enderecos, preco)
     with tab2:
-        for pedido in lista_aluguel:
-            if pedido['idUsuario'] == st.session_state.id:
-                for item in lista_itens_pedidos:
-                    if item.get("idPedido") == pedido.get("idPedido"):
-                        item_pedido = item
-                for i in lista_trans_aluguel:
-                    if i.get("idPedido") == pedido.get("idPedido"):
-                        aluguel = i
-                with st.expander(f"{visualizar_gerador(item_pedido.get("idGerador")).get("modelo")}"):
-                    st.write(f"Valor diario: {aluguel.get("valorDiario")}")
-                    st.write(f"Quantidade: {item_pedido.get("quantidade")}")
-                    st.write(f"Dias Alugados: {aluguel.get("diasAluguel")}")
-                    st.write(f"Preço Total: {aluguel.get("totalAluguel")}")
-                    st.write(f"Data Inicio: {aluguel.get("dataInicio")}")
-                    st.write(f"Data Fim: {aluguel.get("dataFim")}")
-                    
+        adiciona_pedido_carrinho(lista_compras, lista_itens_pedidos,lista_aluguel, lista_trans_aluguel, "Concluido")     
     with tab3:
-        for pedido in lista_aluguel:
-            if pedido['idUsuario'] == st.session_state.id:
-                for item in lista_itens_pedidos:
-                    if item.get("idPedido") == pedido.get("idPedido"):
-                        item_pedido = item
-                for i in lista_trans_aluguel:
-                    if i.get("idPedido") == pedido.get("idPedido"):
-                        aluguel = i
-                with st.expander(f"{visualizar_gerador(item_pedido.get("idGerador")).get("modelo")}"):
-                    st.write(f"Valor diario: {aluguel.get("valorDiario")}")
-                    st.write(f"Quantidade: {item_pedido.get("quantidade")}")
-                    st.write(f"Dias Alugados: {aluguel.get("diasAluguel")}")
-                    st.write(f"Preço Total: {aluguel.get("totalAluguel")}")
-                    st.write(f"Data Inicio: {aluguel.get("dataInicio")}")
-                    st.write(f"Data Fim: {aluguel.get("dataFim")}")
+        adiciona_pedido_carrinho(lista_compras, lista_itens_pedidos,lista_aluguel, lista_trans_aluguel, "Cancelado")
                     
-                   
    
